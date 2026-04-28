@@ -1,12 +1,11 @@
 "use client"
 
 import { Popover, PopoverPanel, Transition } from "@headlessui/react"
-import { ArrowRightMini, XMark } from "@medusajs/icons"
-import { Text, clx, useToggleState } from "@medusajs/ui"
+import { XMark } from "@medusajs/icons"
+import { Text, useToggleState } from "@medusajs/ui"
 import { Fragment } from "react"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import CountrySelect from "../country-select"
 import LanguageSelect from "../language-select"
 import { HttpTypes } from "@medusajs/types"
 import { Locale } from "@lib/data/locales"
@@ -24,8 +23,7 @@ type SideMenuProps = {
   currentLocale: string | null
 }
 
-const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
-  const countryToggleState = useToggleState()
+const SideMenu = ({ locales, currentLocale }: SideMenuProps) => {
   const languageToggleState = useToggleState()
 
   return (
@@ -67,67 +65,41 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                     className="flex flex-col h-full bg-[rgba(3,7,18,0.5)] rounded-rounded justify-between p-6"
                   >
                     <div className="flex justify-end" id="xmark">
-                      <button data-testid="close-menu-button" onClick={close}>
+                      <button
+                        data-testid="close-menu-button"
+                        onClick={close}
+                      >
                         <XMark />
                       </button>
                     </div>
+
                     <ul className="flex flex-col gap-6 items-start justify-start">
-                      {Object.entries(SideMenuItems).map(([name, href]) => {
-                        return (
-                          <li key={name}>
-                            <LocalizedClientLink
-                              href={href}
-                              className="text-3xl leading-10 hover:text-ui-fg-disabled"
-                              onClick={close}
-                              data-testid={`${name.toLowerCase()}-link`}
-                            >
-                              {name}
-                            </LocalizedClientLink>
-                          </li>
-                        )
-                      })}
+                      {Object.entries(SideMenuItems).map(([name, href]) => (
+                        <li key={name}>
+                          <LocalizedClientLink
+                            href={href}
+                            className="text-3xl leading-10 hover:text-ui-fg-disabled"
+                            onClick={close}
+                            data-testid={`${name.toLowerCase()}-link`}
+                          >
+                            {name}
+                          </LocalizedClientLink>
+                        </li>
+                      ))}
                     </ul>
+
                     <div className="flex flex-col gap-y-6">
                       {!!locales?.length && (
-                        <div
-                          className="flex justify-between"
-                          onMouseEnter={languageToggleState.open}
-                          onMouseLeave={languageToggleState.close}
-                        >
-                          <LanguageSelect
-                            toggleState={languageToggleState}
-                            locales={locales}
-                            currentLocale={currentLocale}
-                          />
-                          <ArrowRightMini
-                            className={clx(
-                              "transition-transform duration-150",
-                              languageToggleState.state ? "-rotate-90" : ""
-                            )}
-                          />
-                        </div>
-                      )}
-                      <div
-                        className="flex justify-between"
-                        onMouseEnter={countryToggleState.open}
-                        onMouseLeave={countryToggleState.close}
-                      >
-                        {regions && (
-                          <CountrySelect
-                            toggleState={countryToggleState}
-                            regions={regions}
-                          />
-                        )}
-                        <ArrowRightMini
-                          className={clx(
-                            "transition-transform duration-150",
-                            countryToggleState.state ? "-rotate-90" : ""
-                          )}
+                        <LanguageSelect
+                          toggleState={languageToggleState}
+                          locales={locales}
+                          currentLocale={currentLocale}
                         />
-                      </div>
+                      )}
+
                       <Text className="flex justify-between txt-compact-small">
-                        © {new Date().getFullYear()} Ville de Bécancour. Tous droits
-                        réservés.
+                        © {new Date().getFullYear()} Ville de Bécancour. Tous
+                        droits réservés.
                       </Text>
                     </div>
                   </div>

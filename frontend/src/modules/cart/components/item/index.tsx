@@ -20,32 +20,43 @@ type ItemProps = {
   currencyCode: string
 }
 
+const MAX_QTY = 10
+
 const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  /** Sécurisation de la quantité actuelle */
+  const safeQuantity =
+    typeof item.quantity === "number" &&
+    item.quantity >= 1 &&
+    item.quantity <= MAX_QTY
+      ? item.quantity
+      : 1
+
   const changeQuantity = async (quantity: number) => {
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QTY) {
+      return
+    }
+
     setError(null)
     setUpdating(true)
 
-    await updateLineItem({
-      lineId: item.id,
-      quantity,
-    })
-      .catch((err) => {
-        setError(err.message)
+    try {
+      await updateLineItem({
+        lineId: item.id,
+        quantity,
       })
-      .finally(() => {
-        setUpdating(false)
-      })
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setUpdating(false)
+    }
   }
-
-  // TODO: Update this to grab the actual max inventory
-  const maxQtyFromInventory = 10
-  const maxQuantity = item.variant?.manage_inventory ? 10 : maxQtyFromInventory
 
   return (
     <Table.Row className="w-full" data-testid="product-row">
+      {/* Image */}
       <Table.Cell className="!pl-0 p-4 w-24">
         <LocalizedClientLink
           href={`/products/${item.product_handle}`}
@@ -62,6 +73,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
         </LocalizedClientLink>
       </Table.Cell>
 
+      {/* Titre / Variante */}
       <Table.Cell className="text-left">
         <Text
           className="txt-medium-plus text-ui-fg-base"
@@ -72,38 +84,45 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
         <LineItemOptions variant={item.variant} data-testid="product-variant" />
       </Table.Cell>
 
+      {/* Quantité */}
       {type === "full" && (
         <Table.Cell>
           <div className="flex gap-2 items-center w-28">
-            <DeleteButton id={item.id} data-testid="product-delete-button" />
+            <DeleteButton
+              id={item.id}
+              data-testid="product-delete-button"
+            />
+
             <CartItemSelect
-              value={item.quantity}
-              onChange={(value) => changeQuantity(parseInt(value.target.value))}
+              value={safeQuantity}
+              onChange={(event) =>
+                changeQuantity(Number(event.target.value))
+              }
               className="w-14 h-10 p-4"
+              disabled={updating}
               data-testid="product-select-button"
             >
-              {/* TODO: Update this with the v2 way of managing inventory */}
-              {Array.from(
-                {
-                  length: Math.min(maxQuantity, 10),
-                },
-                (_, i) => (
-                  <option value={i + 1} key={i}>
-                    {i + 1}
+              {Array.from({ length: MAX_QTY }, (_, i) => {
+                const qty = i + 1
+                return (
+                  <option key={qty} value={qty}>
+                    {qty}
                   </option>
                 )
-              )}
-
-              <option value={1} key={1}>
-                1
-              </option>
+              })}
             </CartItemSelect>
+
             {updating && <Spinner />}
           </div>
-          <ErrorMessage error={error} data-testid="product-error-message" />
+
+          <ErrorMessage
+            error={error}
+            data-testid="product-error-message"
+          />
         </Table.Cell>
       )}
 
+      {/* Prix unitaire */}
       {type === "full" && (
         <Table.Cell className="hidden small:table-cell">
           <LineItemUnitPrice
@@ -114,15 +133,19 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
         </Table.Cell>
       )}
 
+      {/* Total */}
       <Table.Cell className="!pr-0">
         <span
           className={clx("!pr-0", {
-            "flex flex-col items-end h-full justify-center": type === "preview",
+            "flex flex-col items-end h-full justify-center":
+              type === "preview",
           })}
         >
           {type === "preview" && (
-            <span className="flex gap-x-1 ">
-              <Text className="text-ui-fg-muted">{item.quantity}x </Text>
+            <span className="flex gap-x-1">
+              <Text className="text-ui-fg-muted">
+                {safeQuantity}×
+              </Text>
               <LineItemUnitPrice
                 item={item}
                 style="tight"
@@ -130,6 +153,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
               />
             </span>
           )}
+
           <LineItemPrice
             item={item}
             style="tight"

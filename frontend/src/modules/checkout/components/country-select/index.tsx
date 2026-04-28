@@ -1,47 +1,32 @@
-import { forwardRef, useImperativeHandle, useMemo, useRef } from "react"
+"use client"
 
-import NativeSelect, {
-  NativeSelectProps,
-} from "@modules/common/components/native-select"
+import { forwardRef } from "react"
 import { HttpTypes } from "@medusajs/types"
+import { NativeSelectProps } from "@modules/common/components/native-select"
 
+/**
+ * CountrySelect
+ * ----------------------------------
+ * Projet local : la sélection du pays est désactivée volontairement.
+ *
+ * - Une seule région/country est utilisée (ex: Canada / Québec)
+ * - Aucun changement de pays autorisé via l'interface
+ * - Ce composant retourne null pour éviter :
+ *   - le rendu d’un <select>
+ *   - l’apparition d’une flèche inutile
+ *   - toute confusion utilisateur
+ *
+ * Le fichier est conservé pour :
+ * - ne pas casser les imports existants
+ * - permettre une réactivation future simple si nécessaire
+ */
 const CountrySelect = forwardRef<
   HTMLSelectElement,
   NativeSelectProps & {
     region?: HttpTypes.StoreRegion
   }
->(({ placeholder = "Pays", region, defaultValue, ...props }, ref) => {  const innerRef = useRef<HTMLSelectElement>(null)
-
-  useImperativeHandle<HTMLSelectElement | null, HTMLSelectElement | null>(
-    ref,
-    () => innerRef.current
-  )
-
-  const countryOptions = useMemo(() => {
-    if (!region) {
-      return []
-    }
-
-    return region.countries?.map((country) => ({
-      value: country.iso_2,
-      label: country.display_name,
-    }))
-  }, [region])
-
-  return (
-    <NativeSelect
-      ref={innerRef}
-      placeholder={placeholder}
-      defaultValue={defaultValue}
-      {...props}
-    >
-      {countryOptions?.map(({ value, label }, index) => (
-        <option key={index} value={value}>
-          {label}
-        </option>
-      ))}
-    </NativeSelect>
-  )
+>(() => {
+  return null
 })
 
 CountrySelect.displayName = "CountrySelect"
