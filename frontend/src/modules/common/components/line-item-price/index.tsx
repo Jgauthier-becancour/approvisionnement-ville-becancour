@@ -14,10 +14,10 @@ const LineItemPrice = ({
   style = "default",
   currencyCode,
 }: LineItemPriceProps) => {
-  const { total, original_total } = item
-  const originalPrice = original_total
-  const currentPrice = total
-  const hasReducedPrice = currentPrice < originalPrice
+const { total, original_total } = item
+const originalPrice = original_total ?? 0
+const currentPrice = total ?? 0
+const hasReducedPrice = currentPrice < originalPrice
 
   return (
     <div className="flex flex-col gap-x-2 text-ui-fg-subtle items-end">
@@ -26,7 +26,7 @@ const LineItemPrice = ({
           <>
             <p>
               {style === "default" && (
-                <span className="text-ui-fg-subtle">Original: </span>
+                <span className="text-ui-fg-subtle">Prix original : </span>
               )}
               <span
                 className="line-through text-ui-fg-muted"

@@ -149,10 +149,10 @@ function FreeShippingInline({
             {price.target_reached ? (
               <div className="flex items-center gap-1.5">
                 <CheckCircleSolid className="text-green-500 inline-block" />{" "}
-                Free Shipping unlocked!
+                La livraison gratuite est activée !
               </div>
             ) : (
-              `Unlock Free Shipping`
+              `Débloquez la livraison gratuite`
             )}
           </div>
 
@@ -225,10 +225,10 @@ function FreeShippingPopup({
                 {price.target_reached ? (
                   <div className="flex items-center gap-1.5">
                     <CheckCircleSolid className="text-green-500 inline-block" />{" "}
-                    Free Shipping unlocked!
+                    La livraison gratuite est activée !
                   </div>
                 ) : (
-                  `Unlock Free Shipping`
+                  `Débloquez la livraison gratuite`
                 )}
               </div>
 
@@ -267,14 +267,14 @@ function FreeShippingPopup({
             className="rounded-2xl bg-transparent shadow-none outline-none border-[1px] border-white text-[15px] py-2.5 px-4"
             href="/cart"
           >
-            View cart
+            Voir le panier
           </LocalizedClientLink>
 
           <LocalizedClientLink
             className="flex-grow rounded-2xl bg-white text-neutral-950 shadow-none outline-none border-[1px] border-white text-[15px] py-2.5 px-4 text-center"
             href="/store"
           >
-            View products
+            Voir les produits
           </LocalizedClientLink>
         </div>
       </div>

@@ -14,11 +14,11 @@ type ProductTabsProps = {
 const ProductTabs = ({ product }: ProductTabsProps) => {
   const tabs = [
     {
-      label: "Product Information",
+      label: "Informations sur le produit",
       component: <ProductInfoTab product={product} />,
     },
     {
-      label: "Shipping & Returns",
+      label: "Livraison & Retours",
       component: <ShippingInfoTab />,
     },
   ]
@@ -85,17 +85,17 @@ const ShippingInfoTab = () => {
         <div className="flex items-start gap-x-2">
           <FastDelivery />
           <div>
-            <span className="font-semibold">Fast delivery</span>
+            <span className="font-semibold">Livraison rapide</span>
             <p className="max-w-sm">
-              Your package will arrive in 3-5 business days at your pick up
-              location or in the comfort of your home.
+              Votre colis arrivera dans les 3-5 jours ouvrables à votre point de retrait
+              ou dans le confort de votre domicile.
             </p>
           </div>
         </div>
         <div className="flex items-start gap-x-2">
           <Refresh />
           <div>
-            <span className="font-semibold">Simple exchanges</span>
+            <span className="font-semibold">Échanges faciles</span>
             <p className="max-w-sm">
               Is the fit not quite right? No worries - we&apos;ll exchange your
               product for a new one.
@@ -105,7 +105,7 @@ const ShippingInfoTab = () => {
         <div className="flex items-start gap-x-2">
           <Back />
           <div>
-            <span className="font-semibold">Easy returns</span>
+            <span className="font-semibold">Retours simples</span>
             <p className="max-w-sm">
               Just return your product and we&apos;ll refund your money. No
               questions asked – we&apos;ll do our best to make sure your return
